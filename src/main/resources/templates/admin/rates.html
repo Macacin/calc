@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Управление курсами валют</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">Калькулятор</a>
+    <div class="navbar-nav">
+      <a class="nav-link" href="/admin/users">Пользователи</a>
+      <a class="nav-link" href="/admin/rates">Курсы валют</a>
+      <a class="nav-link" href="/logout">Выход</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h1>Управление курсами валют</h1>
+
+  <form method="post" action="/admin/rates/update" class="mb-4">
+    <div class="row">
+      <div class="col-md-4">
+        <label class="form-label">Пара валют (например USD-EUR)</label>
+        <input type="text" class="form-control" name="currencyPair" required>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Курс обмена</label>
+        <input type="number" step="0.0001" class="form-control" name="rate" required>
+      </div>
+      <div class="col-md-4 align-self-end">
+        <button type="submit" class="btn btn-primary">Обновить курс</button>
+      </div>
+    </div>
+  </form>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Пара валют</th>
+      <th>Курс</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="rate : ${rates}">
+      <td th:text="${rate.currencyPair}"></td>
+      <td th:text="${rate.rate}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

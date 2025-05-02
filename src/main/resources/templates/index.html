@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Главная</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">Калькулятор</a>
+    <div class="navbar-nav">
+      <a class="nav-link" href="/">Главная</a>
+      <a sec:authorize="!isAuthenticated()" class="nav-link" href="/login">Вход</a>
+      <a sec:authorize="!isAuthenticated()" class="nav-link" href="/register">Регистрация</a>
+      <a sec:authorize="isAuthenticated()" class="nav-link" href="/currency">Конвертер валют</a>
+      <a sec:authorize="isAuthenticated()" class="nav-link" href="/ohm-law">Закон Ома</a>
+      <a sec:authorize="hasRole('ADMIN')" class="nav-link" href="/admin/users">Пользователи</a>
+      <a sec:authorize="hasRole('ADMIN')" class="nav-link" href="/admin/rates">Курсы валют</a>
+      <a sec:authorize="isAuthenticated()" class="nav-link" href="/logout">Выход</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <div sec:authorize="isAuthenticated()">
+    <h2>Добро пожаловать, <span sec:authentication="name"></span>!</h2>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <h4>История операций</h4>
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+          <tr>
+            <th sec:authorize="hasRole('ADMIN')">Пользователь</th>
+            <th>Тип операции</th>
+            <th>Детали</th>
+            <th>Время</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="item : ${history}">
+            <td sec:authorize="hasRole('ADMIN')" th:text="${item.username}"></td>
+            <td>
+              <span th:if="${item.operationType == 'CONVERSION'}" class="badge bg-primary">Конвертация</span>
+              <span th:if="${item.operationType == 'OHM_LAW'}" class="badge bg-success">Закон Ома</span>
+            </td>
+            <td th:text="${item.details}"></td>
+            <td th:text="${#temporals.format(item.timestamp, 'dd.MM.yyyy HH:mm')}"></td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(history)}">
+            <td colspan="4" class="text-center">Нет операций</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div sec:authorize="!isAuthenticated()" class="text-center mt-5">
+    <h1>Калькуляторная система</h1>
+    <p class="lead">Для работы с калькуляторами требуется авторизация</p>
+    <a href="/login" class="btn btn-primary btn-lg">Войти</a>
+    <a href="/register" class="btn btn-secondary btn-lg ms-2">Регистрация</a>
+  </div>
+</div>
+</body>
+</html>
