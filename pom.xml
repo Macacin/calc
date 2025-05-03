@@ -93,18 +93,21 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.11.0</version>
 				<configuration>
-					<!-- Use project java.version property -->
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<!-- Forking ensures separate process picks up annotation processors -->
-					<fork>true</fork>
 					<annotationProcessorPaths>
+						<!-- MapStruct annotation processor -->
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
+						<!-- Lombok processor, если вы его используете -->
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 							<version>${lombok.version}</version>
 						</path>
 					</annotationProcessorPaths>
+					<fork>true</fork>
 				</configuration>
 			</plugin>
 			<plugin>
