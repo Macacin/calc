@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AuthController {
     @GetMapping("/login")
     public String login() {
-        return "login";  // шаблон login.html
+        return "login";
+    }
+    @GetMapping("/")
+    public String index() {
+        return "index";
     }
 }
