@@ -9,6 +9,8 @@ import com.example.pharmacy.repository.CategoryRepository;
 import com.example.pharmacy.repository.ManufacturerRepository;
 import com.example.pharmacy.repository.DrugRepository;
 import com.example.pharmacy.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,8 @@ import java.math.BigDecimal;
 
 @Configuration
 public class DataInitializer {
+    private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
+
     @Bean
     public CommandLineRunner initData(
             CategoryRepository categoryRepository,
@@ -26,7 +30,9 @@ public class DataInitializer {
             UserRepository userRepository,
             PasswordEncoder passwordEncoder
     ) {
+
         return args -> {
+            log.info(">>> Running DataInitializer.initData()");
             // === Сид категорий ===
             Category analgesics;
             Category antibiotics;
@@ -66,7 +72,6 @@ public class DataInitializer {
             }
 
             if (userRepository.count() == 0) {
-                // Админ
                 userRepository.save(createUser("admin", "admin", Role.ROLE_ADMIN, passwordEncoder));
                 System.out.println(">>> Default admin created: login=admin, password=admin");
 

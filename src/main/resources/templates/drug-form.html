@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Препарат</title></head>
+<body>
+<h2 th:text="${drug.id} == null ? 'Новый препарат' : 'Редактировать препарат'"></h2>
+<form th:action="@{/drugs-ui}" th:object="${drug}" method="post">
+    <input type="hidden" th:field="*{id}" />
+
+    <div>
+        <label>Название:</label>
+        <input th:field="*{name}" required />
+        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    </div>
+
+    <div>
+        <label>ID категории:</label>
+        <input th:field="*{categoryId}" required type="number"/>
+        <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
+    </div>
+
+    <div>
+        <label>ID производителя:</label>
+        <input th:field="*{manufacturerId}" required type="number"/>
+        <div th:if="${#fields.hasErrors('manufacturerId')}" th:errors="*{manufacturerId}"></div>
+    </div>
+
+    <div>
+        <label>Цена:</label>
+        <input th:field="*{price}" required step="0.01" type="number"/>
+        <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+    </div>
+
+    <div>
+        <label>Описание:</label>
+        <textarea th:field="*{description}"></textarea>
+    </div>
+
+    <button type="submit">Сохранить</button>
+    <a th:href="@{/drugs-ui}">Отмена</a>
+</form>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Ошибка</title></head>
+<body>
+<h2>Произошла ошибка</h2>
+<p th:text="${message}">Что-то пошло не так.</p>
+<a th:href="@{/drugs-ui}">Вернуться к списку</a>
+</body>
+</html>

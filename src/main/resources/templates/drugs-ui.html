@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Препараты</title></head>
+<body>
+<h2>Препараты</h2>
+<a th:href="@{/drugs-ui/new}">Добавить препарат</a>
+<form th:action="@{/drugs-ui}" method="get">
+    Название: <input type="text" name="filter" th:value="${filter}" />
+    Сортировать по:
+    <select name="sortField">
+        <option th:value="name" th:selected="${sortField=='name'}">Название</option>
+        <option th:value="price" th:selected="${sortField=='price'}">Цена</option>
+    </select>
+    <select name="sortDir">
+        <option th:value="asc" th:selected="${sortDir=='asc'}">↑</option>
+        <option th:value="desc" th:selected="${sortDir=='desc'}">↓</option>
+    </select>
+    <button type="submit">Применить</button>
+</form>
+
+<table border="1" cellpadding="4">
+    <thead>
+    <tr>
+        <th>Название</th><th>Цена</th><th>Категория ID</th><th>Производитель ID</th><th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="d : ${drugs}">
+        <td th:text="${d.name}">Name</td>
+        <td th:text="${d.price}">0.00</td>
+        <td th:text="${d.categoryId}">CID</td>
+        <td th:text="${d.manufacturerId}">MID</td>
+        <td>
+            <a th:href="@{|/drugs-ui/edit/${d.id}|}">✎</a>
+            <form th:action="@{|/drugs-ui/delete/${d.id}|}" method="post" style="display:inline">
+                <button type="submit">🗑</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
