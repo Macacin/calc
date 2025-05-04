@@ -31,6 +31,23 @@ public class BrowserLauncher implements ApplicationListener<ApplicationReadyEven
         } catch (Exception e) {
             logger.error("Failed to open browser at {}", url, e);
         }
+
+        String os = System.getProperty("os.name").toLowerCase();
+        Runtime rt = Runtime.getRuntime();
+        try {
+            if (os.contains("mac")) {
+                rt.exec(new String[]{"open", url});
+            } else if (os.contains("win")) {
+                rt.exec(new String[]{"rundll32", "url.dll,FileProtocolHandler", url});
+            } else if (os.contains("nux") || os.contains("nix")) {
+                rt.exec(new String[]{"xdg-open", url});
+            } else {
+                throw new UnsupportedOperationException("Cannot open browser automatically on OS: " + os);
+            }
+            logger.info("Fallback browser command executed for OS: {}", os);
+        } catch (Exception e) {
+            logger.error("Failed to launch browser automatically. Please open {} manually.", url, e);
+        }
     }
 }
 
