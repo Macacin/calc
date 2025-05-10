@@ -1,43 +1,237 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Препараты</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Препараты</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .drugs-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .page-title {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .btn-add {
+            background-color: #28a745;
+            border-color: #28a745;
+            padding: 10px 25px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .btn-add:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .filter-form {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .filter-form .form-group {
+            margin-bottom: 15px;
+        }
+        .filter-form label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        .form-control-custom {
+            border-radius: 5px;
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            transition: border-color 0.3s;
+        }
+        .form-control-custom:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        .btn-apply {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px 25px;
+            font-weight: 500;
+        }
+        .btn-apply:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        .table-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        .table-custom thead th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+        }
+        .table-custom tbody tr {
+            transition: background-color 0.2s;
+        }
+        .table-custom tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        .table-custom td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+        .btn-action {
+            padding: 5px 10px;
+            margin: 0 3px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            transition: all 0.3s;
+        }
+        .btn-edit {
+            color: #fff;
+            background-color: #17a2b8;
+            border: 1px solid #17a2b8;
+        }
+        .btn-edit:hover {
+            background-color: #138496;
+            border-color: #117a8b;
+        }
+        .btn-delete {
+            color: #fff;
+            background-color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+        .price-cell {
+            font-weight: 500;
+            color: #28a745;
+        }
+        .empty-row {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+        }
+        .btn-cancel {
+            color: #6c757d;
+            border: 1px solid #6c757d;
+            padding: 10px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .btn-cancel:hover {
+            background-color: #f8f9fa;
+            text-decoration: none;
+        }
+    </style>
+</head>
 <body>
-<h2>Препараты</h2>
-<a th:href="@{/drugs-ui/new}">Добавить препарат</a>
-<form th:action="@{/drugs-ui}" method="get">
-    Название: <input type="text" name="filter" th:value="${filter}" />
-    Сортировать по:
-    <select name="sortField">
-        <option th:value="name" th:selected="${sortField=='name'}">Название</option>
-        <option th:value="price" th:selected="${sortField=='price'}">Цена</option>
-    </select>
-    <select name="sortDir">
-        <option th:value="asc" th:selected="${sortDir=='asc'}">↑</option>
-        <option th:value="desc" th:selected="${sortDir=='desc'}">↓</option>
-    </select>
-    <button type="submit">Применить</button>
-</form>
+<div class="container">
+    <div class="drugs-container">
+        <h2 class="page-title">Список препаратов</h2>
 
-<table border="1" cellpadding="4">
-    <thead>
-    <tr>
-        <th>Название</th><th>Цена</th><th>Категория ID</th><th>Производитель ID</th><th>Действия</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="d : ${drugs}">
-        <td th:text="${d.name}">Name</td>
-        <td th:text="${d.price}">0.00</td>
-        <td th:text="${d.categoryId}">CID</td>
-        <td th:text="${d.manufacturerId}">MID</td>
-        <td>
-            <a th:href="@{|/drugs-ui/edit/${d.id}|}">✎</a>
-            <form th:action="@{|/drugs-ui/delete/${d.id}|}" method="post" style="display:inline">
-                <button type="submit">🗑</button>
+        <a th:href="@{/drugs-ui/new}" class="btn btn-primary btn-add">
+            <i class="fas fa-plus"></i> Добавить препарат
+        </a>
+
+        <div class="filter-form">
+            <form th:action="@{/drugs-ui}" method="get" class="row g-3">
+                <div class="col-md-5">
+                    <label for="filter">Название:</label>
+                    <input type="text" id="filter" name="filter" th:value="${filter}"
+                           class="form-control form-control-custom" placeholder="Поиск по названию">
+                </div>
+                <div class="col-md-3">
+                    <label>Сортировать по:</label>
+                    <select name="sortField" class="form-control form-control-custom">
+                        <option th:value="name" th:selected="${sortField=='name'}">Название</option>
+                        <option th:value="price" th:selected="${sortField=='price'}">Цена</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label>Направление:</label>
+                    <select name="sortDir" class="form-control form-control-custom">
+                        <option th:value="asc" th:selected="${sortDir=='asc'}">По возрастанию</option>
+                        <option th:value="desc" th:selected="${sortDir=='desc'}">По убыванию</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary btn-apply w-100">
+                        <i class="fas fa-filter"></i> Применить
+                    </button>
+                </div>
             </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        </div>
+
+        <div class="table-container">
+            <table class="table-custom">
+                <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Цена</th>
+                    <th>Категория ID</th>
+                    <th>Производитель ID</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="d : ${drugs}">
+                    <td th:text="${d.name}">Name</td>
+                    <td class="price-cell" th:text="${'₽' + #numbers.formatDecimal(d.price, 1, 2)}">0.00</td>
+                    <td th:text="${d.categoryId}">CID</td>
+                    <td th:text="${d.manufacturerId}">MID</td>
+                    <td>
+                        <a th:href="@{|/drugs-ui/edit/${d.id}|}" class="btn-action btn-edit" title="Редактировать">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                        <form th:action="@{|/drugs-ui/delete/${d.id}|}" method="post" style="display:inline">
+                            <button type="submit" class="btn-action btn-delete" title="Удалить"
+                                    onclick="return confirm('Вы уверены, что хотите удалить этот препарат?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${drugs.empty}">
+                    <td colspan="5" class="empty-row">
+                        <i class="fas fa-info-circle fa-lg"></i><br>
+                        Препараты не найдены
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-3">
+            <a class="btn-cancel" th:href="@{/}">На главную</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
